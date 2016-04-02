@@ -236,15 +236,15 @@ class Logger(object):
 
 Here the *root* logger is shared across of the all instances. When one of these instances modify the *root* logger the other ones are also affected by
 the change. We could frame that as a *bugs from a mutable global state*. But the question here is ask to oursevles if the DI pattern overcomes the global
-state problems: Bugs from mutable global state, Poor testability, inflexibilty, code comphrension, concurreny issues, etc.
+state problems: **Bugs from mutable global state, Poor testability, inflexibilty, code comphrension, concurreny issues, etc**.
 
 As we saw before, the dependency injection pattern wires all of our functions with the same instance, either using a *singleton* pattern by the DI
 library or passing the same instance to each function, worths to say that dependeny pattern derives in more flexibility and testability, event though we still
-having a **global and share state*. We must be alert with the following problems : Bugs from mutable global state and concurreny issues.
+having a **global and share state*. Then We must be alert with the problems raised because of the mutable global state and concurreny issues.
 
 Once we arrived here we might thing that the DI is not at all helping us to right better and safe code, even in case of the use of libraries that wire
-the functions automatically we are losing readebility. Lets considerer the following apoximation of our **myloging** module:
-a [global classe](https://pythonconquerstheuniverse.wordpress.com/2010/10/20/a-globals-class-pattern-for-python/) pattern.
+the functions automatically **we are losing readebility**. Lets considerer the following apoximation of our *myloging* module:
+a [global class](https://pythonconquerstheuniverse.wordpress.com/2010/10/20/a-globals-class-pattern-for-python/) pattern.
 
 {% highlight python %}
 import logging
@@ -267,8 +267,7 @@ class Logger(object):
 logger = Logger()
 {% endhighlight python %}
 
-Here we faced the way of share the same instance along the code using a 
-[global classe](https://pythonconquerstheuniverse.wordpress.com/2010/10/20/a-globals-class-pattern-for-python/) pattern. The code that uses this
+Here we faced the way of share the same instance along the code using a global class pattern. The code that uses this
 module turns out being easy to read and mantain.
 
 {% highlight python %}
@@ -293,13 +292,13 @@ if __name__ == "__main__":
 {% endhighlight python %}
 
 In contrast and because of the global state shared and mutability - the new *setup* method changes the behaviour of the logger class, and as
-it is we have increased the uncertainty of the program and its unflexibility, making almost impossible give different behaviours to different parts
-of the code wihout affecting into each other.
+it is **we have increased the uncertainty of the program and its unflexibility, making almost impossible give different behaviours to different parts
+of the code wihout affecting into each other**.
 
 # Recaping
 
 To sum up the following list tries to enumerate all of those things that we have seen in this post:
 
-    * Dependency injection helps us to build code to much couple.
-    * Consider the use of DI libraries taking into account the trade off between readability and functionality
-    * Global classes stil have issues becuase of the global state nature, even thought they can be considered in scenarios where there is small chances of mutability.
+    * Dependency injection helps us to build code lossely coupled.
+    * Consider the use of DI libraries taking into account the trade off between readability and functionality.
+    * Global classes still have issues becuase of the global state nature, even thought they can be considered in scenarios where there is small chances of mutability.
