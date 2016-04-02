@@ -4,7 +4,8 @@ title: Dependency Injection libraries, why and why not use them with Python
 ---
 
 Recently the DI pattern has appeard in front of me as a design pattern, no matters how but it
-challenged me.
+challenged me. In this post I want to review the usage of the DI pattern and compare it with more
+traditional patterns such as the global class pattern.
 
 I have never been keen on design patterns as a programmer, not beause I thing this is not
 a iteresting field, I guess the subject by it self never caughtes me instead of other fields. My short knowledge about
