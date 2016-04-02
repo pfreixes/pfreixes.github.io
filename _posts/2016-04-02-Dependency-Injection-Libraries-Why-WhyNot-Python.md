@@ -4,23 +4,23 @@ title: Dependency Injection libraries, why and why not use them with Python
 ---
 
 Recently the DI pattern has appeard in front of me as a design pattern, no matters how but it
-challenged me. In this post I want to review the usage of the DI pattern and compare it with more
-traditional patterns such as the global class pattern.
+challenged me. In this post I want to review the usage of the DI pattern, the use of this pattern
+using a library and at last compare it with more traditional patterns such as the global class pattern.
 
 I have never been keen on design patterns as a programmer, not beause I thing this is not
-a iteresting field, I guess the subject by it self never caughtes me instead of other fields. My short knowledge about
-design patterns is thanks to those friends that I have had the opportunity to work with them, and
-sometimes their teaching has challenged me to improve me in the design patterns field.
+a iteresting field, more because I guess the subject by it self never caughtes me instead of other fields.
+My knowledge about design patterns is thanks to those friends that I have had the opportunity to work with them, and
+sometimes their leasons have challenged me to improve me in the design patterns field.
 
 There are a lot of literature about DI and IoC over there, from this magnifique [post](//martinfowler.com/articles/injection.html) 
 by Martin Flowers till good [threads](//stackoverflow.com/questions/130794/what-is-dependency-injection) in stackoverflow.
-But Im keen on move the conversation in the Python context and the use of DI libraries, where they are not fully used by the most of projects and community.
+But Im keen on move the conversation in the Python context and the use of the DI libraries, where these are not fully used by the most of projects and community.
 
 ## The DI library and implicitly
 
-The following snippet shows the code that challenge me. It uses a [DI library](//stackoverflow.com/questions/130794/what-is-dependency-injection) 
-that takes benefeit of the Python. It helps the developer injecting the dependencies to the functions using
-decorators. It has support for other mechanisms such as metaclasses and protocol descriptors, but we will leave them aside.
+The following snippet shows the use of a [DI library](//stackoverflow.com/questions/130794/what-is-dependency-injection) 
+that takes benefeit of the Python, in terms of dynamic language . It helps the developer injecting the dependencies intoto the functions using
+decorators. It does also with other mechanisms such as metaclasses and protocol descriptors, but we will leave them aside.
 
 {% highlight python %}
 from di import injector, Key, DependencyMap
@@ -50,11 +50,12 @@ if __name__ == "__main__":
     main()
 {% endhighlight python %}
 
-The *inject* as a decorator wires automatically our *main* function with the same instance of our logger class. This allows to the
-functions that use the *logger* classs do not worry about how to build it, hence it makes the code lessly coupled.
+The *inject* decorator wires automatically our *main* function with the same instance of our *logger* class. This allows to the
+functions that use the *logger* classs do not worry about how to build it, hence it makes the code lessly coupled. We can se how
+the dependency passing argument becomes implicitly due the use of the library.
 
-We can se how the dependency passing argument becomes implicitly due the use of the library. In the following but, the code does the same
-but it makes it explicity, as the dependency injection pattern defines when it uses the parameter passing way.
+The dependency pattern can be done easly without the use of a DI library, just passing the parameter to all of these functions
+that require the instance, it becomes explicity. The following code shows that.
 
 {% highlight python %}
 from .logging import Logger
@@ -72,8 +73,9 @@ if __name__ == "__main__":
     main(logger)
 {% endhighlight python %}
 
-Both cases remove the factory pattern used by the following code, where it leaves the code very coupled and tied. If we want to change
-the constructor of the *Logger* class we must modify the whole code where this class is instanciated.
+Both cases removes the coupling between the functions and the instance creation, completly different to the tradtional factory pattern.
+The next code shows how the use of factories into each function couples the codee. if we want to change the constructor for any reason,
+the constructor of the *Logger* class must be modified into the whole code.
 
 {% highlight python %}
 from mylogging import Logger
@@ -92,7 +94,7 @@ if __name__ == "__main__":
     main()
 {% endhighlight python %}
 
-This code is also affected by a issue raised because of the global state, if we execute the command the result appears twice in the console. We will face it later.
+This code is also affected by a issue raised because of the global state. When we execute the command the result will appear twice in the console. We will face it later.
 
 ## Tunning the logging instance verbosity
 
@@ -128,7 +130,7 @@ if __name__ == "__main__":
 The code wires the functions with the instance class configured with the proper debug level. All functions that use this instance will
 behave as we exepected regarding the logging mechanism. 
 
-Now lets we are going to modify the code that uses the DI library, the following code injects the *Logger* instance that was configured with
+Now we are going to modify the code that uses the DI library, the following code injects the *Logger* instance that was configured with
 the debug level.
 
 {% highlight python %}
@@ -165,8 +167,8 @@ if __name__ == "__main__":
     main()
 {% endhighlight python %}
 
-As we can see the readability of the code decrease because of the use of a isolated factory behind the *mylogger* function. Imagine a situation
-where the factory decorated by the dependency maps is placed too far away, the code will become even harder to read than now. 
+As we can see the readability of the code decrease because of the use of an isolated factory behind the *mylogger* function. Imagine a situation
+where the factory decorated by the dependency maps is placed very far away, the code will become even harder to read than now. 
 
 To try to figure out this problem, we will couple the configuration and the factory of create a new *Logger* instance into the *main* method. Luckly we have the
 *register* method to inject the dependency programatically in execution time, it will help us to create the proper factory method being aware of the option
@@ -209,13 +211,13 @@ We made it, although the readaballity of the code is still harder than the explc
 
 ## The global state symptom
 
-Until now we hae seen how the DI libraries can decrese the readability of our code, even thought it gives us an automatically
+Until now we have seen how the DI libraries can decrese the readability of our code, even thought it gives us an automatically
 way to inject the right instances into the functions as keyword args - [others](https://github.com/google/pinject) uses the arguments and a namming convention. But
-from the beginning we have been stumbling with the issues regarding the [global state](http://programmers.stackexchange.com/questions/148108/why-is-global-state-so-evil).
+from the beginning we have been stumbling with the issues of the [global state](http://programmers.stackexchange.com/questions/148108/why-is-global-state-so-evil).
 
-The factory example that we used at the begging, where it printed twice the results of the program was affected by this problem. The following code shows the internals of the 
-*mylogging* module. As you can see each time that the class is instanciated it registeres the *StreamHandler* handler, hereby as many instances of the *Logger* class
-are created as many prints to the console will be done.
+The factory example that we used at the beginning, that code was affected by this problem. The following snippet shows the internals of the 
+*mylogging* module. As you can see, each time that a *Logger* class is instanciated it registeres the *StreamHandler* handler, hereby as many
+instances of the *Logger* class are created as many prints to the console will be done.
 
 {% highlight python %}
 import logging
@@ -240,10 +242,10 @@ state problems: **Bugs from mutable global state, Poor testability, inflexibilty
 
 As we saw before, the dependency injection pattern wires all of our functions with the same instance, either using a *singleton* pattern by the DI
 library or passing the same instance to each function, worths to say that dependeny pattern derives in more flexibility and testability, event though we still
-having a **global and share state*. Then We must be alert with the problems raised because of the mutable global state and concurreny issues.
+having a **global and share state**. We must be alert with the problems raised because of the mutable global state and the concurreny issues as well.
 
-Once we arrived here we might thing that the DI is not at all helping us to right better and safe code, even in case of the use of libraries that wire
-the functions automatically **we are losing readebility**. Lets considerer the following apoximation of our *myloging* module:
+Once we arrived here we might thing that the DI is not after all helping us to write better and safe code, even in the case of the use of libraries
+that wire the functions automatically we are **losing readability**. Lets to consider the following aproximation of our *myloging* module : the use of
 a [global class](https://pythonconquerstheuniverse.wordpress.com/2010/10/20/a-globals-class-pattern-for-python/) pattern.
 
 {% highlight python %}
@@ -291,9 +293,9 @@ if __name__ == "__main__":
     main()
 {% endhighlight python %}
 
-In contrast and because of the global state shared and mutability - the new *setup* method changes the behaviour of the logger class, and as
-it is **we have increased the uncertainty of the program and its unflexibility, making almost impossible give different behaviours to different parts
-of the code wihout affecting into each other**.
+In contrast and because of the global state shared and mutability - the new *setup* method changes the behaviour of the logger class,
+we have **increased the uncertainty** of the program and its **unflexibility**, making almost impossible give different behaviours
+to different parts of the code wihout affecting into each other.
 
 # Recaping
 
