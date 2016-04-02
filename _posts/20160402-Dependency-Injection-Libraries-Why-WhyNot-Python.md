@@ -3,7 +3,7 @@ layout: post
 title: Dependency Injection libraries, why and why not use them with Python
 ---
 
-# Dependency Injection libraries, why and why not use them with Python
+# {{page.title}}
 
 Recently the DI pattern has appeard in front of me as a design pattern, no matters how but it
 challenged me.
@@ -17,13 +17,13 @@ There are a lot of literature about DI and IoC over there, from this magnifique 
 by Martin Flowers till good [threads](//stackoverflow.com/questions/130794/what-is-dependency-injection) in stackoverflow.
 But Im keen on move the conversation in the Python context and the use of DI libraries, where they are not fully used by the most of projects and community.
 
-# The DI library and implicitly
+## The DI library and implicitly
 
 The following snippet shows the code that challenge me. It uses a [DI library](//stackoverflow.com/questions/130794/what-is-dependency-injection) 
 that takes benefeit of the Python. It helps the developer injecting the dependencies to the functions using
 decorators. It has support for other mechanisms such as metaclasses and protocol descriptors, but we will leave them aside.
 
-```py
+{% highlight python %}
 from di import injector, Key, DependencyMap
 
 from mylogging import Logger
@@ -49,7 +49,7 @@ def main(logger=MyLogger):
 
 if __name__ == "__main__":
     main()
-```
+{% endhighlight python %}
 
 The *inject* as a decorator wires automatically our *main* function with the same instance of our logger class. This allows to the
 functions that use the *logger* classs do not worry about how to build it, hence it makes the code lessly coupled.
@@ -57,7 +57,7 @@ functions that use the *logger* classs do not worry about how to build it, hence
 We can se how the dependency passing argument becomes implicitly due the use of the library. In the following but, the code does the same
 but it makes it explicity, as the dependency injection pattern defines when it uses the parameter passing way.
 
-```py
+{% highlight python %}
 from .logging import Logger
 
 def sum(logger)
@@ -71,12 +71,12 @@ def main(logger)
 if __name__ == "__main__":
     logger = Logger()
     main(logger)
-```
+{% endhighlight python %}
 
 Both cases remove the factory pattern used by the following code, where it leaves the code very coupled and tied. If we want to change
 the constructor of the *Logger* class we must modify the whole code where this class is instanciated.
 
-```py
+{% highlight python %}
 from mylogging import Logger
 
 def sum(x, y):
@@ -91,11 +91,11 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
+{% endhighlight python %}
 
 This code is also affected by a issue raised because of the global state, if we execte the command the result appears twice in the console. We will face it later.
 
-# Tunning the logging instance verbosity
+## Tunning the logging instance verbosity
 
 Following the previous example we want to add a new param to the *Logger* intance to decide which level of verbosity the program
 will have, and we will use a command option flag to configure the level desired. To simplify the scenario we will just take into
@@ -104,7 +104,7 @@ consideration two verbose levels : *debug* or *info*.
 Leaving for a while the factory pattern we are going to start seeing the proper way to to that with the dependency injection with no use
 of libraries, the following code shows it:
 
-```py
+{% highlight python %}
 import sys
 from mylogging import Logger
 
@@ -124,14 +124,14 @@ if __name__ == "__main__":
 
     logger = Logger(debug=debug)
     main(logger)
-```
+{% endhighlight python %}
 
 The code wires the functions with the instance class configured with the proper debug level. All functions that use this instance will
 behave as we exepected regarding the logging mechanism. 
 
 The following code uses the DI library to inject a *Logger* instance properly configured with the debug level given as a option param.
 
-```py
+{% highlight python %}
 import sys
 
 from di import injector, Key, DependencyMap
@@ -163,7 +163,7 @@ def main(logger=MyLogger):
 
 if __name__ == "__main__":
     main()
-```
+{% endhighlight python %}
 
 From scratch the mechanism to inject the properly *Logger* instance using a isolated factory behind the *mylogger* function, and decorated by the dependency
 map, is decreasing the readability of our code. Imagine a situation where the factory decorated by the dependency maps is placed too far away, the code becomes
@@ -173,7 +173,7 @@ To try to figure out this problem, we will couple the configuration and the fact
 *register* method to inject the dependency programatically in execution time, it will help us to create the proper factory method being aware of the option
 commands given by the user. The following code shows it:
 
-```py
+{% highlight python %}
 import sys
 from functools import partial
 from di import injector, Key, DependencyMap
@@ -204,11 +204,11 @@ if __name__ == "__main__":
     logger_debug_aware = partial(Logger, debug=debug)
     dm.register(MyLogger, lambda _: logger_debug_aware(), flags=DependencyMap.SINGLETON | DependencyMap.FACTORY)
     main()
-``` 
+{% endhighlight python %}
 
 We made it, although the readaballity of the code is still harder than the explcit dependency injection example.
 
-# The global state symptom
+## The global state symptom
 
 Until now we see how the DI libraries can decrese the readability of our code, even thought it gives us an automatically
 way to inject the right instances into the functions as keyword args - [others](https://github.com/google/pinject) uses the arguments and a namming convention. But
@@ -218,7 +218,7 @@ The factory example that we said that it printed twice the results of the progra
 *mylogging* module. As you can see each time that the class is instanciated it registeres the *StreamHandler*, hereby as many instances of the *Logger* class
 being done as many prints to the console will be done.
 
-```py
+{% highlight python %}
 import logging
 
 class Logger(object):
@@ -233,7 +233,7 @@ class Logger(object):
 
     def debug(self, msg):
         self.__logger.debug(msg)
-```
+{% endhighlight python %}
 
 Here the *root* logger is shared across of the all instances, when one these instances modify the *root* logger the other ones are also affected by
 the change. We could frame that as *bugs from a mutable global state*. But the question here is ask to oursevles if the DI pattern overcomes the global
@@ -247,7 +247,7 @@ Once we arrived here we might thing that the DI is not at all helping us to righ
 the functions automatically we are losing readebility. Lets considerer the following apoximation of our **myloging** module:
 a [global classe](https://pythonconquerstheuniverse.wordpress.com/2010/10/20/a-globals-class-pattern-for-python/) pattern.
 
-```py
+{% highlight python %}
 import logging
 
 class Logger(object):
@@ -266,13 +266,13 @@ class Logger(object):
         self.__logger.debug(msg)
 
 logger = Logger()
+{% endhighlight python %}
 
-```
 Here we faced the way of inject the same instance of logging using a 
 [global classe](https://pythonconquerstheuniverse.wordpress.com/2010/10/20/a-globals-class-pattern-for-python/) pattern. The code that uses this
 module turns out easy to read and mantain.
 
-```py
+{% highlight python %}
 import sys
 from globallogging import logger
 
@@ -291,7 +291,7 @@ if __name__ == "__main__":
         debug = False
     logger.setup(debug)
     main()
-```
+{% endhighlight python %}
 
 In contrast and because of the global state shared and mutability - the new *setup* method changes the behaviour of the logger class - as
 it is we increased the uncertainty of the program and its unflexibility, making almost impossible give different behaviours to different parts
