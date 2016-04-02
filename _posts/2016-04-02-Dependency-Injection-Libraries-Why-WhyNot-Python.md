@@ -3,8 +3,6 @@ layout: post
 title: Dependency Injection libraries, why and why not use them with Python
 ---
 
-# {{page.title}}
-
 Recently the DI pattern has appeard in front of me as a design pattern, no matters how but it
 challenged me.
 
