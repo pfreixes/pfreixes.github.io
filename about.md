@@ -4,12 +4,12 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+I have more than 10 years of experience with Software Engineering getting strong programming and design skills about distributed,
+fault tolerance and high availability architectures using open source.
 
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+I am motivated by the pleasure of writing source code. I like to figure out the best solution for every problem, using all the programming
+I have been learning these years: readable, reusable and documented code and unit testing.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[pfreixes@gmail.com](mailto:pfreixes@gmail.com)
