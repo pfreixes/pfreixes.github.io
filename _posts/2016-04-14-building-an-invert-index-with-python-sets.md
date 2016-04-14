@@ -27,7 +27,7 @@ This is a tweet about python and windows
 This is a tweet about python and linux and windows
 This is a tweet about rust
 This is a tweet about the languages such as python running in linux
-{% highlight %}
+{% endhighlight console %}
 
 A query composed by *Python* and *Windows* words would return just the second sentence. In the case presented we are relaxing the use of
 boolean operands where we are going to use always *ANDs* between words.
@@ -52,7 +52,7 @@ The following snippet shows few examples of the value got by the hash function:
 >>> hash(frozenset(['bar', 'foo']))
 4955649761666739161
 
-{% highlight %}
+{% endhighlight python %}
 
 As you can notice the last two entries generate the same hash value, worth mentioning that sets/frozensets have no sense of the order. In the case of the
 implementation shown is also a requirement, look up for documents with the *foo* and *bar* words irrespective of the order.
@@ -77,7 +77,7 @@ how with a bit of *itertools* sauce we are able to generate all of these needed 
 [('my',), ('name',), ('is',), ('Foo',), ('and',), ('surname',), ('Bar',)]
 [('my', 'name'), ('my', 'is'), ('my', 'Foo'), ('my', 'and'), ('my', 'surname'), ....
 
-{% highlight %}
+{% endhighlight python %}
 
 The itertools (combinations)[https://docs.python.org/2/library/itertools.html#itertools.combinations] helps us to create all of
 needed values to be used as input of the inverted index function.
@@ -98,7 +98,7 @@ both data structures:
 >>> d = { frozenset(['Foo', 'Bar']): set([0]), frozenset(['Foo', 'Bar', 'surname']): set([0]) }
 >>> d[frozenset(['Foo', 'Bar'])]
 set([0])
-{% highlight %}
+{% endhighlight python %}
 
 As we can see each entry of the inverted index is in fact a *set*, it means that we are able to do bitwise operations between 
 different entries. To get all of these documents that contain a certain words and not other ones it is a cinch.
@@ -177,7 +177,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-{% highlight %}
+{% endhighlight python %}
 
 As an example we used a tweets corpus to search the tweets that have the have the words *python* and *linux* but not those tweets that have the word
 *windows*,
@@ -187,4 +187,4 @@ $ cat tweets.txt | ./text_search_index.py python linux -windows
 Entry found: This is a tweet about python and linux
 
 Entry found: This is a tweet about the languages such as python running in linux
-{% highlight %}
+{% endhighlight console %}
