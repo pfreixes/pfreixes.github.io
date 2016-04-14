@@ -20,7 +20,7 @@ Once the index is created we can use the same index function to process the word
 documents that are related with the index entry. For instance, the following sentences are used as tweet entries of our
 implementation:
 
-{% highlight %}
+{% highlight console %}
 $ cat tweets.txt
 This is a tweet about python and linux
 This is a tweet about python and windows
@@ -182,7 +182,7 @@ if __name__ == '__main__':
 As an example we used a tweets corpus to search the tweets that have the have the words *python* and *linux* but not those tweets that have the word
 *windows*,
 
-{% highlight %}
+{% highlight console %}
 $ cat tweets.txt | ./text_search_index.py python linux -windows
 Entry found: This is a tweet about python and linux
 
