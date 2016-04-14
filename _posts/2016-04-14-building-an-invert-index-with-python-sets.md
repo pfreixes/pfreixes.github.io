@@ -20,7 +20,7 @@ Once the index is created we can use the same index function to process the word
 documents that are related with the index entry. For instance, the following sentences are used as tweet entries of our
 implementation:
 
-{% highlight bash %}
+{% highlight %}
 $ cat tweets.txt
 This is a tweet about python and linux
 This is a tweet about python and windows
@@ -34,7 +34,7 @@ boolean operands where we are going to use always *ANDs* between words.
 
 # Frozensets as index function for the inverted index
 
-(Frozensets)[https://docs.python.org/2/library/stdtypes.html#frozenset] are immutable sets and due its immutability are hasheable, this 
+The (Frozensets)[https://docs.python.org/2/library/stdtypes.html#frozenset] are immutable sets and due its immutability are hasheable, this 
 characteristics fits very well to be used as a dictionary keys.
 
 In the inverted index case, as we mentioned before, each document is going to be processed with a index function that takes the words belonging
@@ -182,7 +182,7 @@ if __name__ == '__main__':
 As an example we used a tweets corpus to search the tweets that have the have the words *python* and *linux* but not those tweets that have the word
 *windows*,
 
-{% highlight bash %}
+{% highlight %}
 $ cat tweets.txt | ./text_search_index.py python linux -windows
 Entry found: This is a tweet about python and linux
 
