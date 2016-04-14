@@ -4,7 +4,7 @@ title: Building an invert index with Python sets.
 ---
 
 Almost everybody has written about the Python [sets](https://docs.python.org/2/library/stdtypes.html#set) and a few
-ones about the frozensets. Even that the literature is still too much pragmatic and it lacks of real examples to 
+ones about the frozensets. Even thought the literature is still too much pragmatic and it lacks of real examples to 
 figure out daily problems, something that a Python coder practices almost unwittingly. Yesterday I had an Eureka
 moment trying to find the right problem to show how *frozensets* can be used. This post shows how to build a full text
 search engine through an [invert index](https://en.wikipedia.org/wiki/Inverted_index) using a few lines of Python and plenty
@@ -14,7 +14,7 @@ of memory RAM.
 
 An inverted index is fully used to implement full text search engines, at least the first document retrieval systems appeard many
 years ago. The idea of the inverted index is process the words belonging to each document and create an entry, indexed in a sort way,
-that looks to the proper document. A index colision means that two or more documents share the words used to build the index.
+that looks to the proper document, meaning that index colision reprsents two or more documents sharing the words used by the index.
 
 Once the index is created we can use the same index function to process the words given as a query params to retrieve those
 documents that are related with the index entry. For instance, the following sentences are used as tweet entries of our
@@ -29,17 +29,19 @@ This is a tweet about rust
 This is a tweet about the languages such as python running in linux
 {% endhighlight console %}
 
-A query composed by *Python* and *Windows* words would return just the second sentence. In the case presented we are relaxing the use of
-boolean operands where we are going to use always *ANDs* between words.
+A query composed by *Python* and *Windows* words would return just the second sentence.
+
+In the implementation presented we are relaxing the use of boolean operands where we are going to use always *ANDs* between words.
 
 # Frozensets as index function for the inverted index
 
-The (Frozensets)[https://docs.python.org/2/library/stdtypes.html#frozenset] are immutable sets and due its immutability are hasheable, this 
+The [Frozensets](https://docs.python.org/2/library/stdtypes.html#frozenset) are immutable sets and due its immutability are hasheable, this 
 characteristics fits very well to be used as a dictionary keys.
 
 In the inverted index case, as we mentioned before, each document is going to be processed with a index function that takes the words belonging
-to the document to create the proper index entry. We are going to use the hash function of a frozenset as the inverted index function.
-The following snippet shows few examples of the value got by the hash function: 
+to the document to create the proper index entry. We are going to **use the hash function of a frozenset as the inverted index function**.
+
+The following snippet shows a few examples of the value got by the hash function: 
 
 {% highlight python %}
 
@@ -54,7 +56,7 @@ The following snippet shows few examples of the value got by the hash function:
 
 {% endhighlight python %}
 
-As you can notice the last two entries generate the same hash value, worth mentioning that sets/frozensets have no sense of the order. In the case of the
+As you can notice the last two entries generate the same hash value, worth mentioning that **sets/frozensets have no sense of the order**. In the case of the
 implementation shown is also a requirement, look up for documents with the *foo* and *bar* words irrespective of the order.
 
 # Creating the index ready to be used by any search
@@ -63,7 +65,7 @@ Time and space are intimately coupled in terms of complexity, they usually are i
 in terms of cost of search - not in the processing step - to then use more memory. This election was based on the preference to make an extensive use of the frozensets.
 
 As we saw before the frozenset can be used to get an unique hash value for a bunch of words, we can take profit of that characteristic
-creating as many entries to the inverted index as many unique combinations of words the document has. For example, the following snippet shows
+**creating as many entries to the inverted index as many unique combinations of words the document has**. For example, the following snippet shows
 how with a bit of *itertools* sauce we are able to generate all of these needed hash values.
 
 
@@ -79,8 +81,8 @@ how with a bit of *itertools* sauce we are able to generate all of these needed 
 
 {% endhighlight python %}
 
-The itertools (combinations)[https://docs.python.org/2/library/itertools.html#itertools.combinations] helps us to create all of
-needed values to be used as input of the inverted index function.
+The itertools [combinations](https://docs.python.org/2/library/itertools.html#itertools.combinations) helps us to create all of
+these needed values that will be used as input of the inverted index function.
 
 # Resolving positive words and negative words in a query
 
@@ -88,8 +90,8 @@ In the previous section we have seen how the inverted index key space is populat
 will be used for each key?. 
 
 The documents by them self are stored as elements in a list and the positions are used as pointers, hereby the implementation uses the 
-positions as a way to identify and look up a document. Each value regarding a key of the inverted index stores a *set* with all of the
-document pointers. For example the following snippet shows an example of how documents are index and stored to at last be linked between 
+positions as a way to identify and look up a document. Each value, regarding a key of the inverted index, **stores a set with all of the
+document pointers**. For example the following snippet shows an example of how documents are index and stored to at last be linked between 
 both data structures:
 
 {% highlight python %}
@@ -100,13 +102,13 @@ both data structures:
 set([0])
 {% endhighlight python %}
 
-As we can see each entry of the inverted index is in fact a *set*, it means that we are able to do bitwise operations between 
-different entries. To get all of these documents that contain a certain words and not other ones it is a cinch.
+As we can see each entry of the inverted index is in fact a *set*, it means that **we are able to do bitwise operations between 
+the different entries**. To get all of these documents that contain a certain words and not other ones it is a cinch.
 
 # The implementation
 
 The following snippet shows the final implementation putting all together. The *TextSearchIndex* publishes a interface
-to add new documents and then find them by one or many words. The find interface is used to retrieve those documents
+to add new documents and then find them by one or many words. The *find* method is used to retrieve those documents
 that contain the desired words regarding either the positive or negative ones.
 
 {% highlight python %}
